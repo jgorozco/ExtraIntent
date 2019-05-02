@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ExtraIntent</string>
+
+    <string-array name="serialize_type">
+        <item>Gson</item>
+    </string-array>
 </resources>
