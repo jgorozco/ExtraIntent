@@ -1,4 +1,4 @@
-package com.jgorozco.extraintent
+package com.jgorozco.extraintent.intentextra
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
@@ -13,7 +13,7 @@ class SerializeHelper {
     private val jackson = ObjectMapper()
     private val moshi =  Moshi.Builder().build()
 
-    fun <T> fromJson(jsonString:String, objectClass:Class<T>, jsonTypes:  SerialType ):T?{
+    fun <T> fromJson(jsonString:String, objectClass:Class<T>, jsonTypes: SerialType):T?{
         return when (jsonTypes){
             SerialType.GSON -> gson.fromJson(jsonString,objectClass)
             SerialType.JACKSON ->jackson.readValue(jsonString,objectClass)
