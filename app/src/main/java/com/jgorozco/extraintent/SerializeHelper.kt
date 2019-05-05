@@ -13,11 +13,21 @@ class SerializeHelper {
     private val jackson = ObjectMapper()
     private val moshi =  Moshi.Builder().build()
 
-    fun <T> fromJson(jsonString:String,jsonTypes: JsonTypes):T?{
-        return null
+    fun <T> fromJson(jsonString:String, objectClass:Class<T>, jsonTypes:  SerialType ):T?{
+        return when (jsonTypes){
+            SerialType.GSON -> gson.fromJson(jsonString,objectClass)
+            SerialType.JACKSON ->jackson.readValue(jsonString,objectClass)
+            SerialType.MOSHI -> moshi.adapter(objectClass).fromJson(jsonString)
+            else -> null
+        }
     }
 
-    fun <T>toJson(it:T,jsonTypes: JsonTypes):String?{
-        return null
+    fun <T>toJson(it:T,objectClass:Class<T>,jsonTypes: SerialType):String{
+        return when (jsonTypes){
+            SerialType.GSON -> gson.toJson(it)
+            SerialType.JACKSON -> jackson.writeValueAsString(it)
+            SerialType.MOSHI -> Moshi.Builder().build().adapter(objectClass).toJson(it)
+            else -> ""
+        }
     }
 }

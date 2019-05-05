@@ -1,9 +1,12 @@
 package com.jgorozco.extraintent
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Toast
+import com.jgorozco.extraintent.data.Response
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -11,6 +14,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        sendData.setOnClickListener { clickSendData(it) }
         initAdapters()
     }
 
@@ -20,6 +24,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun clickSendData(view: View){
+        val file_name = "small.json"
+        val json_string = application.assets.open(file_name).bufferedReader().use{
+            it.readText()
+        }
+        val objectToShow=SerializeHelper.instance.fromJson(json_string,Response::class.java, SerialType.GSON )
+        if (objectToShow!=null) {
+            val intent = Intent(this, ResultActivity::class.java)
+            intent.putSmallObjectExtra("object", objectToShow!!, Response::class.java, SerialType.GSON)
+            startActivity(intent)
+        }else{
+            Toast.makeText(this,"null object!!",Toast.LENGTH_LONG).show()
+        }
+
 
     }
 }
