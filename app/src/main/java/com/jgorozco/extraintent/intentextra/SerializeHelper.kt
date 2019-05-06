@@ -15,9 +15,9 @@ class SerializeHelper {
 
     fun <T> fromJson(jsonString:String, objectClass:Class<T>, jsonTypes: SerialType):T?{
         return when (jsonTypes){
-            SerialType.GSON -> gson.fromJson(jsonString,objectClass)
-            SerialType.JACKSON ->jackson.readValue(jsonString,objectClass)
-            SerialType.MOSHI -> moshi.adapter(objectClass).fromJson(jsonString)
+            SerialType.GSON,SerialType.GSON_ZIP -> gson.fromJson(jsonString,objectClass)
+            SerialType.JACKSON,SerialType.JACKSON_ZIP ->jackson.readValue(jsonString,objectClass)
+            SerialType.MOSHI,SerialType.MOSHI_ZIP -> moshi.adapter(objectClass).fromJson(jsonString)
             else -> null
         }
     }

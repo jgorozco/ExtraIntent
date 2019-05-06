@@ -13,4 +13,18 @@
             android:id="@+id/element_number" app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
+    <TextView
+            android:text="is_ok_object"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/is_ok_object"
+            app:layout_constraintTop_toBottomOf="@+id/element_number" android:layout_marginTop="24dp"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
+    <TextView
+            android:text="total time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/total_time"
+            app:layout_constraintTop_toBottomOf="@+id/is_ok_object" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="16dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

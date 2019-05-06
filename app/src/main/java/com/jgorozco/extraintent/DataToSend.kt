@@ -1,5 +1,7 @@
 package com.jgorozco.extraintent
 
-enum class DataToSend {
-    SINGLE_SMALL,SINGLE_BIG,LIST_SMALL,LIST_BIG,LIST_ULTRABIG
+enum class DataToSend(val jsonFile: String) {
+    LIST_SMALL("list_small"),
+    LIST_BIG("list_big"),
+    LIST_ULTRABIG("list_ultrabig")
 }
