@@ -1,6 +1,7 @@
 package com.jgorozco.extraintent.intentextra
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.google.gson.Gson
 import com.squareup.moshi.Moshi
 
@@ -10,7 +11,7 @@ class SerializeHelper {
     }
 
     private val gson = Gson()
-    private val jackson = ObjectMapper()
+    private val jackson = ObjectMapper().registerModule(KotlinModule())
     private val moshi =  Moshi.Builder().build()
 
     fun <T> fromJson(jsonString:String, objectClass:Class<T>, jsonTypes: SerialType):T?{

@@ -2,6 +2,7 @@ package com.jgorozco.extraintent
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.jgorozco.extraintent.data.InterActivityData
 import com.jgorozco.extraintent.data.Response
 import com.jgorozco.extraintent.intentextra.IntentExtra
@@ -10,11 +11,6 @@ import kotlinx.android.synthetic.main.activity_result.*
 import java.util.*
 
 class ResultActivity : AppCompatActivity() {
-
-    override fun onRestart() {
-        super.onRestart()
-        InterActivityData.actual.timeStartSecondActivity = Date().time
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,5 +26,8 @@ class ResultActivity : AppCompatActivity() {
         element_number.text = resultado.results.size.toString()
         is_ok_object.text = (resultado.hashCode() == InterActivityData.actual.objectHash).toString()
         total_time.text =  InterActivityData.actual.totalTime().toString()
+        InterActivityData.actual.timeStartSecondActivity = Date().time
+        Log.d("AAAAAA",InterActivityData.actual.toString())
+
     }
 }

@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         val json_string = application.assets.open(dataToSend.jsonFile+".json").bufferedReader().use{
             it.readText()
         }
+        InterActivityData.actual.objectSize = json_string.length
         val objectToShow=
             SerializeHelper.instance.fromJson(json_string,Response::class.java, SerialType.GSON )
 
