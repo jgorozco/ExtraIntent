@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.jgorozco.extraintent.data.InterActivityData
 import com.jgorozco.extraintent.data.Response
+import com.jgorozco.extraintent.data.ResponseParcel
+import com.jgorozco.extraintent.data.ResponseSerial
 import com.jgorozco.extraintent.intentextra.IntentExtra
 import com.jgorozco.extraintent.intentextra.SerialType
 import com.jgorozco.extraintent.intentextra.SerializeHelper
@@ -36,6 +38,46 @@ class MainActivity : AppCompatActivity() {
             it.readText()
         }
         InterActivityData.actual.objectSize = json_string.length
+        when (spSerializeType.selectedItem){
+            SerialType.PARCEL -> sendParcel(json_string)
+            SerialType.SERIALIZE -> sendSerial(json_string)
+            else -> sendWithJson(json_string)
+        }
+    }
+
+    private fun sendSerial(json_string: String) {
+        val objectToShow=
+            SerializeHelper.instance.fromJson(json_string,ResponseSerial::class.java, SerialType.GSON )
+        if (objectToShow!=null) {
+            InterActivityData.actual.serialType = SerialType.SERIALIZE.name
+            InterActivityData.actual.objectHash= objectToShow.hashCode()
+            val intent = Intent(this, ResultActivity::class.java)
+            InterActivityData.actual.timeBeforeGetExtra = Date().time
+            intent.putExtra(EXTRA_NAME,objectToShow)
+            InterActivityData.actual.timeAfterGetExtra = Date().time
+            startActivity(intent)
+        }else{
+            Toast.makeText(this,"null object!!",Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun sendParcel(json_string: String) {
+        val objectToShow=
+            SerializeHelper.instance.fromJson(json_string,ResponseParcel::class.java, SerialType.GSON )
+        if (objectToShow!=null) {
+            InterActivityData.actual.serialType = SerialType.PARCEL.name
+            InterActivityData.actual.objectHash= objectToShow.hashCode()
+            val intent = Intent(this, ResultActivity::class.java)
+            InterActivityData.actual.timeBeforeGetExtra = Date().time
+            intent.putExtra(EXTRA_NAME,objectToShow)
+            InterActivityData.actual.timeAfterGetExtra = Date().time
+            startActivity(intent)
+        }else{
+            Toast.makeText(this,"null object!!",Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun sendWithJson(json_string:String) {
         val objectToShow=
             SerializeHelper.instance.fromJson(json_string,Response::class.java, SerialType.GSON )
 
