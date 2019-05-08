@@ -3,6 +3,7 @@ package com.jgorozco.extraintent
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -19,10 +20,64 @@ import java.util.*
 const val EXTRA_NAME ="object_extra_name"
 class MainActivity : AppCompatActivity() {
 
+    val automationTypes = listOf(
+        Pair(DataToSend.LIST_SMALL,     SerialType.GSON),
+        Pair(DataToSend.LIST_SMALL,     SerialType.GSON),
+        Pair(DataToSend.LIST_SMALL,     SerialType.GSON),
+        Pair(DataToSend.LIST_BIG,       SerialType.GSON_ZIP),
+        Pair(DataToSend.LIST_SMALL,     SerialType.GSON_ZIP),
+        Pair(DataToSend.LIST_ULTRABIG,  SerialType.GSON_ZIP),
+        Pair(DataToSend.LIST_BIG,       SerialType.GSON_ZIP),
+        Pair(DataToSend.LIST_ULTRABIG,  SerialType.GSON_ZIP),
+        Pair(DataToSend.LIST_BIG,       SerialType.GSON_ZIP),
+        Pair(DataToSend.LIST_ULTRABIG,  SerialType.GSON_ZIP),
+        Pair(DataToSend.LIST_BIG,       SerialType.GSON_ZIP),
+        Pair(DataToSend.LIST_BIG,       SerialType.GSON_ZIP),
+        Pair(DataToSend.LIST_BIG,       SerialType.GSON_ZIP),
+        Pair(DataToSend.LIST_SMALL,     SerialType.JACKSON),
+        Pair(DataToSend.LIST_SMALL,     SerialType.JACKSON),
+        Pair(DataToSend.LIST_SMALL,     SerialType.JACKSON),
+        Pair(DataToSend.LIST_SMALL,     SerialType.JACKSON_ZIP),
+        Pair(DataToSend.LIST_BIG,       SerialType.JACKSON_ZIP),
+        Pair(DataToSend.LIST_ULTRABIG,  SerialType.JACKSON_ZIP),
+        Pair(DataToSend.LIST_BIG,       SerialType.JACKSON_ZIP),
+        Pair(DataToSend.LIST_ULTRABIG,  SerialType.JACKSON_ZIP),
+        Pair(DataToSend.LIST_BIG,       SerialType.JACKSON_ZIP),
+        Pair(DataToSend.LIST_ULTRABIG,  SerialType.JACKSON_ZIP),
+        Pair(DataToSend.LIST_BIG,       SerialType.JACKSON_ZIP),
+        Pair(DataToSend.LIST_BIG,       SerialType.JACKSON_ZIP),
+        Pair(DataToSend.LIST_BIG,       SerialType.JACKSON_ZIP),
+        Pair(DataToSend.LIST_SMALL,     SerialType.MOSHI),
+        Pair(DataToSend.LIST_SMALL,     SerialType.MOSHI),
+        Pair(DataToSend.LIST_SMALL,     SerialType.MOSHI_ZIP),
+        Pair(DataToSend.LIST_BIG,       SerialType.MOSHI_ZIP),
+        Pair(DataToSend.LIST_ULTRABIG,  SerialType.MOSHI_ZIP),
+        Pair(DataToSend.LIST_BIG,       SerialType.MOSHI_ZIP),
+        Pair(DataToSend.LIST_ULTRABIG,  SerialType.MOSHI_ZIP),
+        Pair(DataToSend.LIST_BIG,       SerialType.MOSHI_ZIP),
+        Pair(DataToSend.LIST_ULTRABIG,  SerialType.MOSHI_ZIP),
+        Pair(DataToSend.LIST_BIG,       SerialType.MOSHI_ZIP),
+        Pair(DataToSend.LIST_BIG,       SerialType.MOSHI_ZIP),
+        Pair(DataToSend.LIST_BIG,       SerialType.MOSHI_ZIP),
+        Pair(DataToSend.LIST_SMALL,     SerialType.PARCEL),
+        Pair(DataToSend.LIST_SMALL,     SerialType.PARCEL),
+        Pair(DataToSend.LIST_BIG,       SerialType.PARCEL),
+        Pair(DataToSend.LIST_BIG,       SerialType.PARCEL),
+        Pair(DataToSend.LIST_BIG,       SerialType.PARCEL),
+        Pair(DataToSend.LIST_SMALL,     SerialType.SERIALIZE),
+        Pair(DataToSend.LIST_SMALL,     SerialType.SERIALIZE),
+        Pair(DataToSend.LIST_BIG,       SerialType.SERIALIZE),
+        Pair(DataToSend.LIST_BIG,       SerialType.SERIALIZE),
+        Pair(DataToSend.LIST_BIG,       SerialType.SERIALIZE)
+    )
+
+    var isAutomated = false
+    var automateCount = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         sendData.setOnClickListener { clickSendData(it) }
+        automate.setOnClickListener { clickAutomate(it) }
         initAdapters()
     }
 
@@ -33,16 +88,45 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun clickSendData(view: View){
-        val dataToSend:DataToSend = DataToSend.valueOf(spDataToSend.selectedItem.toString())
-        val json_string = application.assets.open(dataToSend.jsonFile+".json").bufferedReader().use{
+        sendData(Pair(spDataToSend.selectedItem as DataToSend,spSerializeType.selectedItem as SerialType))
+    }
+
+    fun  sendData(dataAndType:Pair<DataToSend,SerialType>){
+        val json_string = application.assets.open(dataAndType.first.jsonFile+".json").bufferedReader().use{
             it.readText()
         }
+        Log.d("BBBBBBB","send data:"+dataAndType.first.jsonFile+" with:"+dataAndType.second.toString())
         InterActivityData.actual.objectSize = json_string.length
-        when (spSerializeType.selectedItem){
+        when (dataAndType.second){
             SerialType.PARCEL -> sendParcel(json_string)
             SerialType.SERIALIZE -> sendSerial(json_string)
             else -> sendWithJson(json_string)
         }
+    }
+
+    fun clickAutomate(view:View){
+        isAutomated = true
+        automateCount = 0
+        sendAutomate()
+    }
+
+    fun sendAutomate(){
+        if (isAutomated && automateCount<automationTypes.size){
+            Log.d("BBBBBBB","send number:"+automateCount+" with "+automationTypes[automateCount])
+            InterActivityData.actual.isAutomate = true
+            sendData(automationTypes[automateCount])
+            automateCount+=1
+        }else{
+            InterActivityData.actual.isAutomate = false
+            isAutomated = false
+            automateCount = 0
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        sendAutomate()
     }
 
     private fun sendSerial(json_string: String) {

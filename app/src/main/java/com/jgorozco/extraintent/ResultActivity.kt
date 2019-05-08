@@ -30,6 +30,9 @@ class ResultActivity : AppCompatActivity() {
         InterActivityData.actual.timeAfterSetExtra = Date().time
         InterActivityData.actual.timeStartSecondActivity = Date().time
         Log.d("AAAAAA",InterActivityData.actual.toString())
+        if (InterActivityData.actual.isAutomate){
+            finish()
+        }
 
     }
 

@@ -11,6 +11,7 @@ class InterActivityData{
     var timePauseFirstActivity:Long = 0
     var timeCreateSecondActivity:Long = 0
     var timeStartSecondActivity:Long = 0
+    var isAutomate:Boolean = false
     var serialType:String = ""
     var objectSize:Int = 0
     var objectHash:Int = 0
