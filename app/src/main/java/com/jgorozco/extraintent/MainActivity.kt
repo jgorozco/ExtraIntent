@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
     fun sendAutomate(){
         if (isAutomated && automateCount<automationTypes.size){
             Log.d("BBBBBBB","send number:"+automateCount+" with "+automationTypes[automateCount])
-            InterActivityData.actual.isAutomate = true
+            InterActivityData.actual.isAutomate = automationTypes.last()!=automationTypes[automateCount]
             sendData(automationTypes[automateCount])
             automateCount+=1
         }else{
