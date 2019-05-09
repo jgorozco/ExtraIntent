@@ -2,7 +2,7 @@ package com.jgorozco.extraintent.data
 
 class InterActivityData{
     companion object {
-        val actual = InterActivityData()
+        val instance = InterActivityData()
     }
     var timeBeforeSetExtra:Long = 0
     var timeAfterSetExtra:Long = 0

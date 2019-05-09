@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
             it.readText()
         }
         Log.d("BBBBBBB","send data:"+dataAndType.first.jsonFile+" with:"+dataAndType.second.toString())
-        InterActivityData.actual.objectSize = json_string.length
+        InterActivityData.instance.objectSize = json_string.length
         when (dataAndType.second){
             SerialType.PARCEL -> sendParcel(json_string)
             SerialType.SERIALIZE -> sendSerial(json_string)
@@ -113,11 +113,11 @@ class MainActivity : AppCompatActivity() {
     fun sendAutomate(){
         if (isAutomated && automateCount<automationTypes.size){
             Log.d("BBBBBBB","send number:"+automateCount+" with "+automationTypes[automateCount])
-            InterActivityData.actual.isAutomate = automationTypes.last()!=automationTypes[automateCount]
+            InterActivityData.instance.isAutomate = automationTypes.last()!=automationTypes[automateCount]
             sendData(automationTypes[automateCount])
             automateCount+=1
         }else{
-            InterActivityData.actual.isAutomate = false
+            InterActivityData.instance.isAutomate = false
             isAutomated = false
             automateCount = 0
         }
@@ -133,12 +133,12 @@ class MainActivity : AppCompatActivity() {
         val objectToShow=
             SerializeHelper.instance.fromJson(json_string,ResponseSerial::class.java, SerialType.GSON )
         if (objectToShow!=null) {
-            InterActivityData.actual.serialType = SerialType.SERIALIZE.name
-            InterActivityData.actual.objectHash= objectToShow.hashCode()
+            InterActivityData.instance.serialType = SerialType.SERIALIZE.name
+            InterActivityData.instance.objectHash= objectToShow.hashCode()
             val intent = Intent(this, ResultActivity::class.java)
-            InterActivityData.actual.timeBeforeGetExtra = Date().time
+            InterActivityData.instance.timeBeforeGetExtra = Date().time
             intent.putExtra(EXTRA_NAME,objectToShow)
-            InterActivityData.actual.timeAfterGetExtra = Date().time
+            InterActivityData.instance.timeAfterGetExtra = Date().time
             startActivity(intent)
         }else{
             Toast.makeText(this,"null object!!",Toast.LENGTH_LONG).show()
@@ -149,12 +149,12 @@ class MainActivity : AppCompatActivity() {
         val objectToShow=
             SerializeHelper.instance.fromJson(json_string,ResponseParcel::class.java, SerialType.GSON )
         if (objectToShow!=null) {
-            InterActivityData.actual.serialType = SerialType.PARCEL.name
-            InterActivityData.actual.objectHash= objectToShow.hashCode()
+            InterActivityData.instance.serialType = SerialType.PARCEL.name
+            InterActivityData.instance.objectHash= objectToShow.hashCode()
             val intent = Intent(this, ResultActivity::class.java)
-            InterActivityData.actual.timeBeforeGetExtra = Date().time
+            InterActivityData.instance.timeBeforeGetExtra = Date().time
             intent.putExtra(EXTRA_NAME,objectToShow)
-            InterActivityData.actual.timeAfterGetExtra = Date().time
+            InterActivityData.instance.timeAfterGetExtra = Date().time
             startActivity(intent)
         }else{
             Toast.makeText(this,"null object!!",Toast.LENGTH_LONG).show()
@@ -169,12 +169,12 @@ class MainActivity : AppCompatActivity() {
         val serialType:SerialType = SerialType.valueOf(spSerializeType.selectedItem.toString())
 
         if (objectToShow!=null) {
-            InterActivityData.actual.serialType = serialType.name
-            InterActivityData.actual.objectHash= objectToShow.hashCode()
+            InterActivityData.instance.serialType = serialType.name
+            InterActivityData.instance.objectHash= objectToShow.hashCode()
             val intent = Intent(this, ResultActivity::class.java)
-            InterActivityData.actual.timeBeforeGetExtra = Date().time
+            InterActivityData.instance.timeBeforeGetExtra = Date().time
             IntentExtra.instance.setExtra(intent,EXTRA_NAME, objectToShow!!, Response::class.java, serialType)
-            InterActivityData.actual.timeAfterGetExtra = Date().time
+            InterActivityData.instance.timeAfterGetExtra = Date().time
             startActivity(intent)
         }else{
             Toast.makeText(this,"null object!!",Toast.LENGTH_LONG).show()
@@ -183,6 +183,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        InterActivityData.actual.timePauseFirstActivity = Date().time
+        InterActivityData.instance.timePauseFirstActivity = Date().time
     }
 }
