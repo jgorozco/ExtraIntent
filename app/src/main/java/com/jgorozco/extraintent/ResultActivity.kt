@@ -16,47 +16,59 @@ class ResultActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        InterActivityData.instance.timeCreateSecondActivity = Date().time
-
+        InterActivityData.instance.actual.timeCreateSecondActivity = Date().time
         setContentView(R.layout.activity_result)
-        InterActivityData.instance.timeBeforeSetExtra = Date().time
+        extractExtra()
+        sendData.setOnClickListener { sendDataToServer() }
+    }
 
-        val serialType = SerialType.valueOf(InterActivityData.instance.serialType)
-        when (serialType){
+    private fun sendDataToServer() {
+        Log.d("AAAAAA","SIZE;"+InterActivityData.instance.totalResult.size)
+
+
+
+        InterActivityData.instance.totalResult.clear()
+    }
+
+    private fun extractExtra() {
+        InterActivityData.instance.actual.timeBeforeSetExtra = Date().time
+
+        val serialType = SerialType.valueOf(InterActivityData.instance.actual.serialType)
+        when (serialType) {
             SerialType.PARCEL -> extractParcel()
             SerialType.SERIALIZE -> extractSerial()
             else -> extractJson()
         }
-        InterActivityData.instance.timeAfterSetExtra = Date().time
-        InterActivityData.instance.timeStartSecondActivity = Date().time
-        Log.d("AAAAAA",InterActivityData.instance.toString())
-        if (InterActivityData.instance.isAutomate){
+        InterActivityData.instance.actual.timeAfterSetExtra = Date().time
+        InterActivityData.instance.actual.timeStartSecondActivity = Date().time
+        Log.d("AAAAAA", InterActivityData.instance.actual.toString())
+        if (InterActivityData.instance.actual.isAutomate) {
+            InterActivityData.instance.totalResult.add(InterActivityData.instance.actual.copy())
             finish()
         }
-
     }
 
     private fun extractSerial() {
         val resultado:ResponseSerial = intent.getSerializableExtra(EXTRA_NAME) as ResponseSerial
-        InterActivityData.instance.timeAfterSetExtra = Date().time
+        InterActivityData.instance.actual.timeAfterSetExtra = Date().time
         element_number.text = resultado.results.size.toString()
-        is_ok_object.text = (resultado.hashCode() == InterActivityData.instance.objectHash).toString()
-        total_time.text =  InterActivityData.instance.totalTime().toString()    }
+        is_ok_object.text = (resultado.hashCode() == InterActivityData.instance.actual.objectHash).toString()
+        total_time.text =  InterActivityData.instance.actual.totalTime().toString()    }
 
     private fun extractParcel() {
         val resultado:ResponseParcel = intent.getParcelableExtra(EXTRA_NAME)
-        InterActivityData.instance.timeAfterSetExtra = Date().time
+        InterActivityData.instance.actual.timeAfterSetExtra = Date().time
         element_number.text = resultado.results.size.toString()
-        is_ok_object.text = (resultado.hashCode() == InterActivityData.instance.objectHash).toString()
-        total_time.text =  InterActivityData.instance.totalTime().toString()
+        is_ok_object.text = (resultado.hashCode() == InterActivityData.instance.actual.objectHash).toString()
+        total_time.text =  InterActivityData.instance.actual.totalTime().toString()
     }
 
     private fun extractJson() {
         val resultado:Response= IntentExtra.instance.getExtra(intent,EXTRA_NAME, Response::class.java,
-            SerialType.valueOf(InterActivityData.instance.serialType))!!
+            SerialType.valueOf(InterActivityData.instance.actual.serialType))!!
         element_number.text = resultado.results.size.toString()
-        is_ok_object.text = (resultado.hashCode() == InterActivityData.instance.objectHash).toString()
-        total_time.text =  InterActivityData.instance.totalTime().toString()
+        is_ok_object.text = (resultado.hashCode() == InterActivityData.instance.actual.objectHash).toString()
+        total_time.text =  InterActivityData.instance.actual.totalTime().toString()
 
     }
 }
